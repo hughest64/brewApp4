@@ -1,11 +1,11 @@
 // load the script at the bottom of the body tag!
 
-var hr = 0
+var hr = 0;
 var mn = document.getElementById('mn');
 var sec = document.getElementById('sec');
-var resetHr = 0
-var resetMn = mn.value
-var resetSec = sec.value
+var resetHr = 0;
+var resetMn = mn.value;
+var resetSec = sec.value;
 var display = document.getElementById('timer');
 var isRunning = false;
 

@@ -11,15 +11,16 @@ var isRunning = false;
 
 
 function setTimer() {
-    // ensure that the imer only runs wtih positive integers
+    // ensure that the timer only runs with positive integers
     totalMn = Math.abs(parseInt(mn.value));
+    // reduce totalMn into hour and minute values
     hr = Math.abs(parseInt(totalMn/60));
     mn.value = totalMn % 60;
     // values that will become strings and displayed in the element
     displayHr = hr;
     displayMn = mn.value;
     displaySec = Math.abs(parseInt(sec.value));
-    // storing values away for reseting the timer
+    // storting values away for reseting the timer
     resetHr = displayHr;
     resetMn = mn.value;
     resetSec = sec.value;
@@ -34,14 +35,14 @@ function run() {
         // if the timer is not set, don't run it
         if (hr == 0 && mn.value == 0 && sec.value == 0) {
             stop();
-        // if the hour place has some value
+        // if their is more than one hour left
         } else if (hr > 0 && sec.value == 0) {
             // subtract hour and reset mn and sec
             if (mn.value == 0) {
                 hr --;
                 mn.value = 59;
                 sec.value = 59;
-            // or sub one from mn and reset sec
+            // or subtract one from mn and reset sec
             } else {
                 mn.value --;
                 sec.value = 59;
@@ -53,7 +54,7 @@ function run() {
         } else {
             sec.value --;
         }
-        // create the display object value
+        // create and set the display
         t = format(hr, mn.value, sec.value);
         display.innerHTML = t;
         // do the same thing again
@@ -61,7 +62,7 @@ function run() {
     } 
 }
 
-// makes the display look how we want it to
+// formats the dispay as HH:MM:SS or MM:SS as necessary
 function format(h, m, s) {
     displayHr = "0" + h;
     displayMn = "0" + m;
@@ -72,6 +73,29 @@ function format(h, m, s) {
         t = displayMn.slice(-2) + ":" + displaySec.slice(-2);
     }
     return t;
+}
+
+
+function start() {
+    if (isRunning  === false) {
+       isRunning = true;
+       setTimeout(run, 1000);
+   }
+}
+
+
+function stop() {
+    isRunning = false;
+}
+
+
+function reset() {
+    isRunning = false;
+    hr = resetHr;
+    mn.value = resetMn;
+    sec.value = resetSec;
+    t = format(hr, resetMn, resetSec);
+    display.innerHTML = t;
 }
 
 

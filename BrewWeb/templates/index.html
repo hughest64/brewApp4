@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1 class="center">Brew System</h1>
+        <div>                   <!--action=+{url_for(index.html) }" (I think?)
+                                 I think it is I just need a redirect on the save veiw-->
+            <form class="center" action="{{ url_for('index') }}">
+                <label class="center"><h2>Recipe Name</h2></label>
+
+                <div class="lineup">
+                    <label for="mash"><h4>Mash Steps</h4></label>
+                    <!--jinja loop to create new <li> for each step-->
+                    <ul style="list-style-type:none" id="mash" name="mash_steps">
+                        <!--{% for x in y %}-->
+                        <li class="left">{{ x }}</li>
+                        <!-- {% endfor %}-->
+                        <li class="left">each step to be populated</li>
+                        <li class="left">by Jinja/python</li>
+                    </ul>
+                </div>
+
+                <div class="lineup">
+                    <!--value will be a Jinja variable {{ variable }}-->
+                    <label name="current_step"><h4>Current Step Goes Here</h4></label>
+                    <!--value will be a Jinja variable {{ variable }}-->
+                    <label class="timer_display" name="timer"><h1>{{ timer_vals['SEC'] }}</h1></label>
+                </div>
+
+                <div class="lineup">
+                    <label for="boil"><h4>Boil Steps</h4></label>
+                    <!--jinja loop to create new <li> for each step-->
+                    <ul style="list-style-type:none" id="boil" name="boil_step">
+                        <!--{% for x in y %}-->
+                        <li class="left">{{ x }}</li>
+                        <!-- {% endfor %}-->
+                        <li class="left">each step to be populated</li>
+                        <li class="left">by Jinja/python file</li>
+                    </ul>
+                </div>
+
+                <div class="btn">
+                    <button type="submit" formaction="{{url_for('set') }}" method="post">Set</button>
+                    <input type="button" value="reset"> <!--run python timer.py reset method-->
+                                         <!--value will need to change based upon timer state-->
+                    <input type="submit" onclick="{{ run }}" value="Run"> <!--run python timer.py pause method-->
+                </div>
+            </form>
+        </div>
+{% endblock %}

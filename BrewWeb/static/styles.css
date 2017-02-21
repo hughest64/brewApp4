@@ -1,0 +1,29 @@
+body {
+    padding: 10;
+    margin: 10;
+}
+
+.lineup {
+    display: inline-block;
+    width: 175px;
+    height: 75px;
+    margin: 10px;
+}
+
+.left {
+    text-align: left;
+}
+
+.center {
+    text-align: center;
+}
+
+.btn {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.timer_display {
+    font-size: 2em;
+    font-weight: bold;
+}

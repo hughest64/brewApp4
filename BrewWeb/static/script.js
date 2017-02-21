@@ -1,4 +1,4 @@
-// load the script at the bottome of the body tag!
+// load the script at the bottom of the body tag!
 
 var hr = 0
 var mn = document.getElementById('mn');

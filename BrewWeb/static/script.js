@@ -20,7 +20,7 @@ function setTimer() {
     displayHr = hr;
     displayMn = mn.value;
     displaySec = Math.abs(parseInt(sec.value));
-    // storting values away for reseting the timer
+    // storing values away for reseting the timer
     resetHr = displayHr;
     resetMn = mn.value;
     resetSec = sec.value;

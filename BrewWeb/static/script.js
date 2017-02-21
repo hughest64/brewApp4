@@ -15,7 +15,7 @@ function setTimer() {
     totalMn = Math.abs(parseInt(mn.value));
     hr = Math.abs(parseInt(totalMn/60));
     mn.value = totalMn % 60;
-    // values that will become stings and displayed in the element
+    // values that will become strings and displayed in the element
     displayHr = hr;
     displayMn = mn.value;
     displaySec = Math.abs(parseInt(sec.value));
@@ -81,6 +81,7 @@ function start() {
        setTimeout(run, 1000);
    }
 }
+
 
 function stop() {
     isRunning = false;

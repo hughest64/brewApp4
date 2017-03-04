@@ -5,12 +5,13 @@
         <button onclick="start()" id="start">start</button>
         <button onclick="stop()" id="stop">stop</button>
         <button onclick="reset()" id="reset">Reset</button>
+        <br><br>
         <div>
-            <input id="mn" type="number" min="0" max="90" value="0">
-            <input id="sec" type="number" min="0" max="59" value="0">
+            <input id="mn" type="number" min="0" max="90" placeholder="MM">
+            <input id="sec" type="number" min="0" max="59" placeholder="SS">
             <button id="save" type="button" onclick="setTimer()">Save</button>
-            <p id="minutes">minutes = {{ timer_vals.get('minutes') }}</p>
-            <p id="seconds">seconds = {{ timer_vals.get('seconds') }}</p>
+            <p id="minutes">(jinja2 var)minutes = {{ timer_vals.get('minutes') }}</p>
+            <p id="seconds">(jinja2 var)seconds = {{ timer_vals.get('seconds') }}</p>
         </div>
-        <script src="/static/script.js{{ query }}"></script>
+        <script src="/static/timer.js{{ query }}"></script>
 {% endblock %}

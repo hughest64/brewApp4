@@ -1,0 +1,12 @@
+I'd like to track a brew start to finish in the app.
+Including:
+- list of  all ingredients and amounts
+  - water, grain, hops, yeast, other additions
+pH on brew day
+  - sparge, strike, mash, boil, etc
+- track gravity throughout
+- monitor and control temps on brew display
+
+I'd like to be able to store all of this locally for easy access
+as well as write it back to xml/bsmx/Google sheets.
+And make some awesome charts for each brew

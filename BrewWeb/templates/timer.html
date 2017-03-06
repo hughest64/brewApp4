@@ -1,6 +1,7 @@
 {# Jinja block that inherits form layout.html #}
 {% extends 'layout.html' %}
 {% block content %}
+        <h2>{{ saves.get('recipe', '') }}</h2>
         <h1 id="timer">00:00</h1>
         <button onclick="start()" id="start">start</button>
         <button onclick="stop()" id="stop">stop</button>
@@ -10,8 +11,6 @@
             <input id="mn" type="number" min="0" max="90" placeholder="MM">
             <input id="sec" type="number" min="0" max="59" placeholder="SS">
             <button id="save" type="button" onclick="setTimer()">Save</button>
-            <p id="minutes">(jinja2 var)minutes = {{ timer_vals.get('minutes') }}</p>
-            <p id="seconds">(jinja2 var)seconds = {{ timer_vals.get('seconds') }}</p>
         </div>
         <script src="/static/timer.js{{ query }}"></script>
 {% endblock %}

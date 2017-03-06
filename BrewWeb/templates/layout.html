@@ -4,10 +4,14 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
         <title>Brew Some Beer!</title>
-        <!--<script src="/static/script.js{{ query }}"></script>-->
         <link href="/static/styles.css{{ query }}" rel="stylesheet" type="text/css" />
     </head>
     <body>
+        <div class="lineup">
+            <a href="/recipes">Recipes</a>
+            <a href="/timer">Timer</a>
+        </div>
+        <br><br>
         {% block content %}{% endblock %}
     </body>
 </html>

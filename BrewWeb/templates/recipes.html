@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <form action="{{ url_for('save') }}" method="post">
+        {% for recipe in recipes %}
+        <input type="radio" name="recipe" value="{{ recipe }}"
+        {% if recipes['recipes'] == recipe %}checked{% endif %}>{{ recipe }}<br>
+        {% endfor %}
+        <br><br>
+        <input type="submit" value="Brew It!">
+    </form>
+{% endblock %}

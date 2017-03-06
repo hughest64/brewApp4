@@ -1,0 +1,24 @@
+- create a view to select a recipe - CHECK
+
+- add href to time view to go there - CHECK
+  - add to layout.html? (I'm thinking a "menu bar" type thing would be good).
+    That menu bar would be accesible in all views.
+
+- populate the contents of a recipe directory - CHECK
+  - form with radio buttons
+
+- save button submits data to save view
+  - add action to go to url_for save with post action on the form - CHECK
+  - use selected recipe as input for save method in python
+  - that will set your tree.root for xml parsing
+  - load all of the appropriate information into and extension
+    for use in timer.html
+- use submitted data from save view to:
+  - lists of mash and boils steps are populated
+  - a label for the recipe name is populated
+  - a timer is set for the first mash step
+  - a label for the step name is populated
+
+- at the end of each timer, the next timer is automatically set
+
+- add functionality to "upload" files to the recipes diretory

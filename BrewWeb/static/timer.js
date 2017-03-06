@@ -1,6 +1,4 @@
 /*TODO:
-- play with the modulo end time thing in run()
-- test
 - change fields to HH and MM (no real need to set seconds)
 - test
 */
@@ -10,10 +8,15 @@ var sec = document.getElementById('sec');
 var display = document.getElementById('timer');
 var isRunning = false;
 
+var totalAdds = 0;
+
 function setTimer() {
+    // we only set the timer if there is some value to set
     if (mn.value || sec.value) {
         // the 450 adds a bump to ms and keeps the timer from skipping
-        var remainingTime = (Math.abs(mn.value) * 60000) + (Math.abs(sec.value * 1000)) + 450;
+        var remainingTime = (
+            (Math.abs(mn.value) * 60000) + (Math.abs(sec.value * 1000)) + 30
+        );
         var resetTime = remainingTime;
         localStorage['remainingTime'] = remainingTime;
         localStorage['resetTime'] = resetTime;
@@ -22,28 +25,28 @@ function setTimer() {
 }
 
 function run() {
-    var endTime = Number(localStorage['endTime']);
-    var remainingTime = endTime - Date.now();
-    // since we lose about 1 ms each time through the loop
-    // we correct by adding a little bit of time every so often
-    if (remainingTime % 1000 <= 10) {
-        // may get tricky with some modulo to make sure we
-        // always get back to 450, not 449, etc
-        endTime += 451; // actual amount may change
-        localStorage['endTime'] = endTime;
-    }
-    localStorage['remainingTime'] = remainingTime;
     if (isRunning) {
+        var endTime = Number(localStorage['endTime']);
+        var remainingTime = endTime - Date.now();
+        // adding some buffer time to make sure we don't lose any time
+        if (remainingTime % 1000 < 10) {
+            endTime += 451;
+            localStorage['endTime'] = endTime;
+        }
+        localStorage['remainingTime'] = remainingTime;
         format(remainingTime);
+        if (remainingTime > 999) {
+            timer = setTimeout(run, 1000);
+        } else {
+            isRunning = false;
+            // make 'remainingTime', and 'resetTime' falsey
+            localStorage['remainingTime'] = '';
+            localStorage['resetTime'] = '';
+            // tests remove later
+            var dif = Number(OGend)
+            var now = Date.now()
+        }
     }
-    if (remainingTime > 999) {
-        timer = setTimeout(run, 1000);
-    } else {
-        // make 'remainingTime', and 'resetTime' falsey
-        localStorage['remainingTime'] = '';
-        localStorage['resetTime'] = '';
-    }
-
 }
 
 function format(t) {
@@ -67,6 +70,8 @@ function start() {
         isRunning = true;
         var remainingTime = Number(localStorage['remainingTime'])
         var endTime = Date.now() + remainingTime;
+        // just for a test, remove later
+        OGend = endTime;
         localStorage['endTime'] = endTime;
         run();
     }

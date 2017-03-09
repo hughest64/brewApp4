@@ -117,7 +117,7 @@ class BeerXMLParser(object):
                 self.dry_hop.append(hop_data)
 
             elif time not in self.boil_hops:
-                self.boil_hops[time] = hop_data
+                self.boil_hops[time] = [hop_data]
 
             else:
                 self.boil_hops[time].append(hop_data)

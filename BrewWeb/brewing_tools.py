@@ -81,7 +81,9 @@ class BeerXMLParser(object):
         '''
         # other ineresting mash setp elements that could be useful:
         # TYPE, INFUSE_AMOUNT, DECOCTION_AMOUNT, INFUSE_TEMP
-
+       
+        # reset any old values
+        self.mash_steps = []
         # loop through the tee and find our mash steps
         for step in self.tree.iter('MASH_STEP'):
             name = step.find('NAME').text
@@ -100,6 +102,11 @@ class BeerXMLParser(object):
         Dry hops and first wort hops are collected in lists and
         all values are strings.
         '''
+        # reset any old values
+        self.first_wort = []
+        self.boil_hops = {}
+        self.dry_hop = []
+        
         for hop in self.tree.iter('HOP'):
             name =  hop.find('NAME').text
             # convert the weight from mg to oz

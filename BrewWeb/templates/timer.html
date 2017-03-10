@@ -3,11 +3,13 @@
 {% block content %}
         <h2>{{ saves.get('recipe', '') }}</h2>
         <h1 id="timer">00:00</h1>
-        <button onclick="start()" id="start">start</button>
-        <button onclick="stop()" id="stop">stop</button>
-        <button onclick="reset()" id="reset">Reset</button>
+        <button onclick="startTimer()" id="start">start</button>
+        <button onclick="stopTimer()" id="stop">stop</button>
+        <button onclick="resetTimer()" id="reset">Reset</button>
+        <button onclick="clearTimer()" id="clear">Clear</button>
         <br><br>
         <div>
+            <input id="hr" type="number" min="0" max="90" placeholder="HH">
             <input id="mn" type="number" min="0" max="90" placeholder="MM">
             <input id="sec" type="number" min="0" max="59" placeholder="SS">
             <button id="save" type="button" onclick="setTimer()">Save</button>

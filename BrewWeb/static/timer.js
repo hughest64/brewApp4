@@ -2,7 +2,8 @@ var hr = document.getElementById('hr')
 var mn = document.getElementById('mn');
 var sec = document.getElementById('sec');
 var display = document.getElementById('timer');
-var isRunning = false;
+//var isRunning = false;
+
 
 
 function setTimer() {
@@ -18,13 +19,11 @@ function setTimer() {
         localStorage['remainingTime'] = remainingTime;
         localStorage['resetTime'] = resetTime;
         formatDisplay(remainingTime);
-    } else {
-        console.log('this shit does not work')
     }
 }
 
 function runTimer() {
-    if (isRunning) {
+    if (localStorage['isRunning']) {
         var endTime = Number(localStorage['endTime']);
         var remainingTime = endTime - Date.now();
         // adding some buffer time to make sure we don't lose any time
@@ -38,7 +37,7 @@ function runTimer() {
             timer = setTimeout(runTimer, 1000);
         } else {
             // make values falsey
-            isRunning = false;
+            localStorage['isRunning'] = '';
             localStorage['remainingTime'] = '';
             localStorage['resetTime'] = '';
             // I think we add a check to see if there is a next step
@@ -65,8 +64,8 @@ function formatDisplay(t) {
 }
 
 function startTimer() {
-    if (!isRunning && localStorage['remainingTime']) {
-        isRunning= true;
+    if (!localStorage['isRunning'] && localStorage['remainingTime']) {
+        localStorage['isRunning'] = 'true';
         var remainingTime = Number(localStorage['remainingTime'])
         var endTime = Date.now() + remainingTime;
         localStorage['endTime'] = endTime;
@@ -75,7 +74,7 @@ function startTimer() {
 }
 
 function stopTimer() {
-    isRunning = false;
+    localStorage['isRunning'] = '';
     clearTimeout(timer);
 }
 
@@ -88,11 +87,31 @@ function resetTimer() {
 
 function clearTimer() {
     stopTimer();
-    isRunning = false;
     localStorage['remainingTime'] = '';
     localStorage['resetTime'] = '';
     localStorage['endTime'] = '';
     var display = document.getElementById('timer').innerHTML = '00:00';
 }
 
-startTimer();
+//startTimer();
+function continueTimer() {
+    if (localStorage['isRunning']){
+        var remainingTime = Number(localStorage['remainingTime'])
+        var endTime = Date.now() + remainingTime;
+        localStorage['endTime'] = endTime;
+        display.innerHTML = 'some damn thing';
+        runTimer();
+    }
+}
+
+// doesn't work, what if you set the new localStorage values directly?
+// redirects fine, but doesn "set" the timer
+function newTimer() {
+    localStorage['newTimer'] = 'true';
+    setTimer();
+}
+
+if (!localStorage['newTimer']) {
+    continueTimer();
+    localStorage['newTimer'] = '';
+}

@@ -81,7 +81,7 @@ class BeerXMLParser(object):
         '''
         # other ineresting mash setp elements that could be useful:
         # TYPE, INFUSE_AMOUNT, DECOCTION_AMOUNT, INFUSE_TEMP
-       
+
         # reset any old values
         self.mash_steps = []
         # loop through the tee and find our mash steps
@@ -89,8 +89,8 @@ class BeerXMLParser(object):
             name = step.find('NAME').text
             # dropping the trailing 0's
             time = step.find('STEP_TIME').text.split('.')[0]
-            temp = step.find('STEP_TEMP').text.split('.')[0]
-
+            farenheit = round(float(step.find('STEP_TEMP').text) * 1.8 + 32)
+            temp = "{:.0f}".format(farenheit)
             elements = (name, time, temp)
             self.mash_steps.append(elements)
 
@@ -106,7 +106,7 @@ class BeerXMLParser(object):
         self.first_wort = []
         self.boil_hops = {}
         self.dry_hop = []
-        
+
         for hop in self.tree.iter('HOP'):
             name =  hop.find('NAME').text
             # convert the weight from mg to oz
@@ -154,8 +154,9 @@ class BeerXMLParser(object):
         ''' Returns a dict of all brew day mand and boil
         steps and the associated values as strings.
         '''
-        self.all_steps = {'Mash':self.mash_steps, 'First_wort':self.first_wort,
-                          'Boil':self.boil_hops, 'Dry_hop':self.dry_hop}
+        self.all_steps = {'mash':self.mash_steps, 'first_wort':self.first_wort,
+                          'boil':self.boil_hops, 'dry_hop':self.dry_hop}
+
         return self.all_steps
 
 
@@ -178,7 +179,7 @@ class BeerXMLParser(object):
 
 # tests
 if __name__ == '__main__':
-    fpath = 'C:/Users/Todd/Desktop/brewweb/recipes/Furious.xml'
+    fpath = 'C:/Users/Todd/Desktop/brewweb/recipes/Oktober-16.xml'
     xml = BeerXMLParser()
     xml.set_XML(fpath)
     mash = xml.get_mash_steps()
@@ -190,11 +191,13 @@ if __name__ == '__main__':
     boilt = xml.get_boil_time()
     btype =  xml.get_brew_type()
 
-    print mash
-    print boilh
-    print fw
-    print dh
+    #print mash
+    #print boilh
+    #print fw
+    #print dh
+    #print get_all
+    #print recipe
+    #print boilt
+    #print btype
+    #get_all['recipe_name'] = recipe
     print get_all
-    print recipe
-    print boilt
-    print btype

@@ -1,9 +1,10 @@
-var hr = document.getElementById('hr')
+var hr = document.getElementById('hr');
 var mn = document.getElementById('mn');
 var sec = document.getElementById('sec');
 var display = document.getElementById('timer');
-//var isRunning = false;
-
+var current_step = document.getElementById('current_step');
+// need to load some json arrays for mash/boil steps
+var steps = JSON.parse(localStorage['steps']);
 
 
 function setTimer() {
@@ -40,9 +41,7 @@ function runTimer() {
             localStorage['isRunning'] = '';
             localStorage['remainingTime'] = '';
             localStorage['resetTime'] = '';
-            // I think we add a check to see if there is a next step
-            // if there is, we set the timer with that value
-            // I think we need to json an array in local storage
+            nextTimer();
         }
     }
 }
@@ -93,25 +92,37 @@ function clearTimer() {
     var display = document.getElementById('timer').innerHTML = '00:00';
 }
 
-//startTimer();
-function continueTimer() {
-    if (localStorage['isRunning']){
-        var remainingTime = Number(localStorage['remainingTime'])
-        var endTime = Date.now() + remainingTime;
-        localStorage['endTime'] = endTime;
-        display.innerHTML = 'some damn thing';
-        runTimer();
+function nextTimer() {
+    stopTimer();
+    var index = Number(localStorage['stepIndex']);
+    if (localStorage['stepIndex'] && index < (steps.length - 1)) {
+        index ++;
+        current_step.innerHTML = steps[index][0];
+        var time = Number(steps[index][1]) * 60000;
+        localStorage['remainingTime'] = time;
+        formatDisplay(time);
+        localStorage['stepIndex'] = index;
     }
 }
 
-// doesn't work, what if you set the new localStorage values directly?
-// redirects fine, but doesn "set" the timer
-function newTimer() {
-    localStorage['newTimer'] = 'true';
-    setTimer();
-}
-
 if (!localStorage['newTimer']) {
-    continueTimer();
+    if (localStorage['recipeLoaded']) {
+        if (!localStorage['stepIndex']){
+            localStorage['stepIndex'] = '0';
+        }
+        var index = Number(localStorage['stepIndex'])
+        current_step.innerHTML = steps[index][0];
+        var time = Number(steps[index][1]) * 60000;
+        localStorage['remainingTime'] = time;
+        formatDisplay(time);
+        localStorage['recipeLoaded'] = '';
+
+    } else {
+        formatDisplay(localStorage['remainingTime']);
+        runTimer();
+    }
+
+} else {
     localStorage['newTimer'] = '';
+    formatDisplay(localStorage['remainingTime']);
 }

@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
-    <form action="{{ url_for('save') }}" method="post">
+    <form action="{{ url_for('saverecipe') }}" method="post">
         {% for recipe in recipes %}
         <input type="radio" name="recipe" value="{{ recipe }}"
         {% if recipes['recipes'] == recipe %}checked{% endif %}>{{ recipe }}<br>

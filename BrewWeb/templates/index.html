@@ -1,48 +1,52 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
+
+<script>
+    {% if data %}
+        var steps = JSON.stringify({{data['mash'] | tojson }})
+        localStorage['steps'] = steps
+    {% endif %}
+</script>
+
+
 <h1 class="center">Brew System</h1>
-        <div>                   <!--action=+{url_for(index.html) }" (I think?)
-                                 I think it is I just need a redirect on the save veiw-->
-            <form class="center" action="{{ url_for('index') }}">
-                <label class="center"><h2>Recipe Name</h2></label>
+
+
+        <div>
+            <form class="center">
+                <label class="center"><h2>{{ data['recipe_name'] }}</h2></label>
+
 
                 <div class="lineup">
                     <label for="mash"><h4>Mash Steps</h4></label>
-                    <!--jinja loop to create new <li> for each step-->
                     <ul style="list-style-type:none" id="mash" name="mash_steps">
-                        <!--{% for x in y %}-->
-                        <li class="left">{{ x }}</li>
-                        <!-- {% endfor %}-->
-                        <li class="left">each step to be populated</li>
-                        <li class="left">by Jinja/python</li>
+                        {% for step in range(data['mash'] | length) %}
+                        <li class="left">{{ "{0} at {2} for {1}".format(*data['mash'][step]) }}</li>
+                        {% endfor %}
                     </ul>
                 </div>
 
-                <div class="lineup">
-                    <!--value will be a Jinja variable {{ variable }}-->
-                    <label name="current_step"><h4>Current Step Goes Here</h4></label>
-                    <!--value will be a Jinja variable {{ variable }}-->
-                    <label class="timer_display" name="timer"><h1>{{ timer_vals['SEC'] }}</h1></label>
-                </div>
 
+                <div class="lineup">
+                    <label name="current_step"><h4>step name here</h4></label>
+                    <h1 class="timer_display" id="timer" name="timer">00:00</h1>
+                </div>
                 <div class="lineup">
                     <label for="boil"><h4>Boil Steps</h4></label>
-                    <!--jinja loop to create new <li> for each step-->
                     <ul style="list-style-type:none" id="boil" name="boil_step">
-                        <!--{% for x in y %}-->
-                        <li class="left">{{ x }}</li>
-                        <!-- {% endfor %}-->
-                        <li class="left">each step to be populated</li>
-                        <li class="left">by Jinja/python file</li>
+                        {% for hops in data['boil'] | sort(reverse=True) %}
+                            {% for hop in data['boil'][hops] %}
+                            <li class="left">{{ "{1} oz {0} at {2} minutes".format(*hop) }}</li>
+                            {% endfor %}
+                        {% endfor %}
                     </ul>
                 </div>
-
                 <div class="btn">
-                    <button type="submit" formaction="{{url_for('set') }}" method="post">Set</button>
-                    <input type="button" value="reset"> <!--run python timer.py reset method-->
-                                         <!--value will need to change based upon timer state-->
-                    <input type="submit" onclick="{{ run }}" value="Run"> <!--run python timer.py pause method-->
+                    <button >Set</button>
+                    <input type="button" value="reset">
+                    <input type="submit"  value="Run">
                 </div>
             </form>
         </div>

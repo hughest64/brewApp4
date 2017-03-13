@@ -1,18 +1,45 @@
-{# Jinja block that inherits form layout.html #}
+{# Jinja block that inherits from layout.html #}
 {% extends 'layout.html' %}
 {% block content %}
-        <h2>{{ saves.get('recipe', '') }}</h2>
+        {# load recipe data into local storage as strigifyed json #}
+        {% if data %}
+        <script>
+            var steps = JSON.stringify({{ data['mash'] | tojson }})
+            localStorage['steps'] = steps;
+            localStorage['recipeLoaded'] = "true"
+        </script>
+        <script src="/static/script.js{{ query }}"></script>
+        {% endif %}
+
+        <h2>{{ data['recipe_name'] }}</h2>
+        <h2 id="current_step"></h2>
         <h1 id="timer">00:00</h1>
-        <button onclick="startTimer()" id="start">start</button>
-        <button onclick="stopTimer()" id="stop">stop</button>
-        <button onclick="resetTimer()" id="reset">Reset</button>
-        <button onclick="clearTimer()" id="clear">Clear</button>
-        <br><br>
         <div>
-            <input id="hr" type="number" min="0" max="90" placeholder="HH">
-            <input id="mn" type="number" min="0" max="90" placeholder="MM">
-            <input id="sec" type="number" min="0" max="59" placeholder="SS">
-            <button id="save" type="button" onclick="setTimer()">Save</button>
+            <button onclick="startTimer()" id="start">start</button>
+            <button onclick="stopTimer()" id="stop">stop</button>
+            <button onclick="resetTimer()" id="reset">Reset</button>
+            <button onclick="clearTimer()" id="clear">Clear</button>
+            <button onclick="nextTimer()" id="next">Next</button>
+        </div>
+        {# list of mash steps #}
+        <div>
+            <label for="mash"><h4>Mash Steps</h4></label>
+            <ul style="list-style-type:none" id="mash" name="mash_steps">
+                {% for step in range(data['mash'] | length) %}
+                <li class="left">{{ "{0} at {2} for {1}".format(*data['mash'][step]) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {# list of boil additions #}
+        <div>
+            <label for="boil"><h4>Boil Steps</h4></label>
+            <ul style="list-style-type:none" id="boil" name="boil_step">
+                {% for hops in data['boil'] | sort(reverse=True) %}
+                    {% for hop in data['boil'][hops] %}
+                    <li class="left">{{ "{1} oz {0} at {2} minutes".format(*hop) }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
         </div>
         <script src="/static/timer.js{{ query }}"></script>
 {% endblock %}

@@ -18,58 +18,43 @@ def new_url():
     return '?q={}'.format(query)
 
 
-def get_saved_data():
-    try:
-        data = json.loads(request.cookies.get('recipe_name'))
-    except TypeError:
-        data = {}
-    return data
-
-
 def get_xml(name):
     try:
-        path = FPATH + name['recipe'] + ".xml"
+        path = FPATH + name + ".xml"
         recipe_data.set_XML(path)
-
-        # this is a dict
         all_steps = recipe_data.get_all_steps()
-        # this is a sting
-        recipe_name = recipe_data.get_recipe_name()
-        # add this to the same dict
-        all_steps['recipe_name'] = recipe_name
-
-        print all_steps
-
-        return all_steps
+        recipe = recipe_data.get_recipe_name()
+        all_steps['recipe_name'] = recipe
 
     except IOError:
-        print "The selected file does not exist"
-        return "The selected file does not exist"
+        all_steps = {}
+
+    return all_steps
 
 
 @app.route('/')
 def index():
     query = new_url()
     extension = {'query':query}
-    data = get_xml(recipe_name)
+    data = get_xml(recipe_name['recipe'])
 
     return render_template('index.html', data=data, **extension)
 
 
 @app.route('/set')
 def set():
-    return render_template('set.html')
+    query = new_url()
+    return render_template('set.html', query=query)
 
 
 @app.route('/timer')
 def timer():
-    data = get_saved_data()
     query = new_url()
-    timer_vals = {'minutes':0, 'seconds':20}
-    extension = {'query':query, 'timer_vals':timer_vals}
-    return render_template('timer.html', saves=data, **extension)
+    data = get_xml(recipe_name['recipe'])
+    extension = {'query':query, 'data':data}
+    return render_template('timer.html', **extension)
 
-# !!! refactor this, possibly deprecate cookie
+
 @app.route('/recipes')
 def load_recipes():
     all_files = os.listdir(FPATH)
@@ -79,23 +64,12 @@ def load_recipes():
         if recipe.split('.')[-1] == 'xml':
             name = '.'.join(recipe.split('.')[:-1])
             recipes.append(name)
-    #data = get_saved_data()
     return render_template('recipes.html', recipes=recipes)
-
-
-@app.route('/save', methods=['POST'])
-def save():
-    response = make_response(redirect(url_for('timer')))
-    # here you can get a cookie, but how do I do this without that?
-    data = get_saved_data()
-    data.update(dict(request.form.items()))
-    response.set_cookie('recipe_name', json.dumps(data))
-    return response
 
 
 @app.route('/saverecipe', methods=['POST'])
 def saverecipe():
-    response = make_response(redirect(url_for('index')))
+    response = make_response(redirect(url_for('timer')))
     # we make this global so it is accesible in index function
     global recipe_name
     # key is 'recipe'

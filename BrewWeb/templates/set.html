@@ -1,11 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<form action="{{ url_for('save') }}" method="post">
-    <label for=""><h1>Set The Timer</h1></label>
-    <input type="number" name="mn" placeholder="MN">
-    <input type="number" name="sec" placeholder="SEC">
-    <input type="submit" name="save" value="save">
-    <script src="/static/script.js{{ query }}"></script>
+<form action="/timer">
+    <h1>Set The Timer</h1>
+    <div>
+        <input id="hr" type="number" min="0" max="90" placeholder="HH">
+        <input id="mn" type="number" min="0" max="90" placeholder="MM">
+        <input id="sec" type="number" min="0" max="59" placeholder="SS">
+        <button type="submit" id="save" onclick="setNewTimer()">Save</button>
+    </div>
 </form>
+<script src="/static/script.js {{ query }}"></script>
 {% endblock %}

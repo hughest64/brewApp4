@@ -1,45 +1,147 @@
 {# Jinja block that inherits from layout.html #}
 {% extends 'layout.html' %}
+
+{% block title %}{{ super() }} | Timer{% endblock %}
+
 {% block content %}
         {# load recipe data into local storage as strigifyed json #}
+        {# This maybe should have a block head type thing#}
         {% if data %}
         <script>
-            var steps = JSON.stringify({{ data['mash'] | tojson }})
+        if ( "{{ data['recipe_name'] }}" != localStorage['recipeName']) {
+            var steps = {{ data['mash'] | tojson }};
+            var boil_time = [ 'Boil', {{ data['boil_time'] }} ]; // this is just the value
+            steps.push(boil_time);
+            var steps = JSON.stringify(steps);
+            var hop_adds = JSON.stringify({{ data['boil'] | tojson }})
+            localStorage['hop_adds'] = hop_adds
             localStorage['steps'] = steps;
-            localStorage['recipeLoaded'] = "true"
+            localStorage['recipeName'] = "{{ data['recipe_name'] }}";
+            // set this to -1 so that nextTimer() will set a 0 index the script loads
+            localStorage['stepIndex'] = '-1';
+            localStorage['recipeLoaded'] = "true";
+        }
         </script>
-        <script src="/static/script.js{{ query }}"></script>
         {% endif %}
+        {# This maybe should have a block head type thing #}
 
-        <h2>{{ data['recipe_name'] }}</h2>
-        <h2 id="current_step"></h2>
-        <h1 id="timer">00:00</h1>
-        <div>
-            <button onclick="startTimer()" id="start">start</button>
-            <button onclick="stopTimer()" id="stop">stop</button>
-            <button onclick="resetTimer()" id="reset">Reset</button>
-            <button onclick="clearTimer()" id="clear">Clear</button>
-            <button onclick="nextTimer()" id="next">Next</button>
-        </div>
-        {# list of mash steps #}
-        <div>
-            <label for="mash"><h4>Mash Steps</h4></label>
-            <ul style="list-style-type:none" id="mash" name="mash_steps">
-                {% for step in range(data['mash'] | length) %}
-                <li class="left">{{ "{0} at {2} for {1}".format(*data['mash'][step]) }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-        {# list of boil additions #}
-        <div>
-            <label for="boil"><h4>Boil Steps</h4></label>
-            <ul style="list-style-type:none" id="boil" name="boil_step">
-                {% for hops in data['boil'] | sort(reverse=True) %}
-                    {% for hop in data['boil'][hops] %}
-                    <li class="left">{{ "{1} oz {0} at {2} minutes".format(*hop) }}</li>
+        <!-- Maybe not header? (header should be used for links in layout.html) -->
+        <header>
+            <h2 class="recipeName" id="recipeName"></h2>
+            <!-- This should probably be a <ul> -->
+            <span class="recipeVitals">
+                <p>Est OG: 1.060</p>  <!-- make thest <li> -->
+                <p>Est PG: 1.070</p>
+                <p>Est FG: 1.015</p>
+            </span>
+        </header>
+
+
+        <!-- Make this a section? -->
+        <div class="main-content group">
+            <div class="timer-content">
+                <h3 class="current_step" id="current_step"></h3>
+                <h1 class="timer" id="timer">00:00</h1>
+                <div class="buttons">
+                    <button onclick="startTimer()" id="start">start</button>
+                    <button onclick="stopTimer()" id="stop">stop</button>
+                    <button onclick="resetTimer()" id="reset">Reset</button>
+                    <button onclick="clearTimer()" id="clear">Clear</button>
+                    <button onclick="nextTimer()" id="next">Next</button>
+                </div>
+            </div>
+
+
+            {# list of mash steps #}
+            <!-- class="mash-steps" ? -->
+            <div class="mash">
+                <label><h3>Mash Steps</h3></label>
+                <ul>
+                    {% for step in range(data['mash'] | length) %}
+                    <li>{{ "{0} at {2} for {1}".format(*data['mash'][step]) }}</li>
                     {% endfor %}
-                {% endfor %}
-            </ul>
+                </ul>
+            </div>
+
+
+            {# list of boil additions #}
+            <!-- class="boil-adds" ? -->
+            <div class="boil">
+                <label><h3>Boil Steps</h3></label>
+                <ul>
+                    {% for hops in data['boil'] | sort(reverse=True) %}
+                        {% for hop in data['boil'][hops] %}
+                        <li>{{ "{1} oz {0} at {2} minutes".format(*hop) }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+
         </div>
+
+
+<!-- setting a manual timer modal stuff -->
+        <!--<div>
+            <h2>Set a Manual Timer</h2>
+            <input id="hr" type="number" min="0" max="90" placeholder="HH">
+            <input id="mn" type="number" min="0" max="90" placeholder="MM">
+            <input id="sec" type="number" min="0" max="59" placeholder="SS">
+            <button type="submit" id="save" onclick="setTimer()">Save</button>
+        </div>-->
+        <br><br>
+        <!-- Trigger/Open The Modal -->
+        <button id="myBtn">New Timer</button>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <div class="modal-header">
+              <span class="close">&times;</span>
+              <h2>Set a Manual Timer</h2>
+            </div>
+            <div class="modal-body">
+                <input id="hr" type="number" min="0" max="90" placeholder="HH">
+                <input id="mn" type="number" min="0" max="90" placeholder="MM">
+                <input id="sec" type="number" min="0" max="59" placeholder="SS">
+                <button type="submit" id="save" onclick="setTimer()">Save</button>
+            </div>
+            <div class="modal-footer">
+              <h3>Modal Footer</h3>
+            </div>
+          </div>
+
+        </div>
+
+        <script>
+            // Get the modal
+            var modal = document.getElementById('myModal');
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("myBtn");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal
+            btn.onclick = function() {
+                modal.style.display = "block";
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>
+
         <script src="/static/timer.js{{ query }}"></script>
 {% endblock %}
